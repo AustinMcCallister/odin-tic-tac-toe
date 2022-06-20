@@ -46,11 +46,14 @@ body {
 }
 
 .board-module {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   margin: .6em;
 }
 
-.board-module:hover {
+.board-module:hover:not(active):not(.taken) {
   background-color: #E5E9F075;
   box-shadow: 0 0 15px 1px #E5E9F0;
   border-radius: 1em;

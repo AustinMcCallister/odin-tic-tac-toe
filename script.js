@@ -135,9 +135,10 @@ const gameController = (() => {
 const displayController = (() => {
   // DOM Cache
   const _board = document.querySelector('.game-container');
+  const _resetButton = document.querySelector('.reset-button');
 
-  const _bindEvent = (e) => {
-    e.addEventListener('mousedown', gameBoard.resolveChoice);
+  const _bindEvent = (e, type, func) => {
+    e.addEventListener(type, func);
   };
 
   const _drawX = () => {
@@ -174,7 +175,7 @@ const displayController = (() => {
         module.dataset.y = j;
         // null = empty, 0 = X, 1 = O
         if (e === null) {
-          _bindEvent(module);
+          _bindEvent(module, 'mousedown', gameBoard.resolveChoice);
         }
         else if (e === 0) {
           module.appendChild(_drawX());
@@ -198,6 +199,7 @@ const displayController = (() => {
   }
 
   draw();
+  _bindEvent(_resetButton, 'mousedown', gameBoard.reset);
 
   return {
     draw,

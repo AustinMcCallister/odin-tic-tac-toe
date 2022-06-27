@@ -80,10 +80,11 @@ body {
   background-color: #5E81AC;
   font-weight: bold;
   font-size: 1.5em;
+  border-radius: .75em;
+  box-shadow: 0 0 3px 0px #2E3440;
+  cursor: pointer;
   margin: 1em;
   padding: .75em 1.5em;
-  border-radius: .75em;
-  cursor: pointer;
 }
 
 .reset-button:hover:not(:active) {

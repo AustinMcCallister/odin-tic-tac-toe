@@ -24,12 +24,85 @@ const gameBoard = (() => {
     gameController.setTurnCount(0);
     displayController.destroy();
     displayController.draw();
+    scoreBoard.resetIndicators();
+    scoreBoard.resetMessages();
   };
 
   return {
     lockBoard,
     resolveChoice,
     reset,
+  }
+})();
+
+const scoreBoard = (() => {
+  // DOM Cache
+  const _playerOneModule = document.querySelector('#p1');
+  const _playerTwoModule = document.querySelector('#p2');
+
+  const _turnIndicators = document.querySelectorAll('.turn-indicator');
+
+  const _playerOneName = _playerOneModule.querySelector('.player-name');
+  const _playerOneIndicator = _playerOneModule.querySelector('.turn-indicator');
+  const _playerOneScore = _playerOneModule.querySelector('.player-score');
+  const _playerOneMessage = _playerOneModule.querySelector('.victory-message');
+
+  const _playerTwoName = _playerTwoModule.querySelector('.player-name');
+  const _playerTwoIndicator = _playerTwoModule.querySelector('.turn-indicator');
+  const _playerTwoScore = _playerTwoModule.querySelector('.player-score');
+  const _playerTwoMessage = _playerTwoModule.querySelector('.victory-message');
+
+  const updateScore = () => {
+    _playerOneScore.innerHTML = playerOne.getScore();
+    _playerTwoScore.innerHTML = playerTwo.getScore();
+  };
+
+  const updateMessages = (state) => {
+    console.log(state);
+    // Player one wins
+    if (state === 0) {
+      _playerOneMessage.innerHTML = 'You Win!';
+    }
+    // Player two wins
+    else if (state === 1) {
+      _playerTwoMessage.innerHTML = 'You Win!';
+    }
+    // Draw
+    else {
+      _playerOneMessage.innerHTML = 'Draw!';
+      _playerTwoMessage.innerHTML = 'Draw!';
+    }
+  };
+
+  const toggleIndicators = () => {
+    _turnIndicators.forEach(indicator => {
+      if (indicator.classList.contains('active')) {
+        indicator.classList.remove('active');
+      }
+      else {
+        indicator.classList.add('active');
+      }
+    });
+  };
+
+  const resetIndicators = () => {
+    if (!_playerOneIndicator.classList.contains('active')) {
+      _playerOneIndicator.classList.add('active');
+      _playerTwoIndicator.classList.remove('active');
+    }
+  };
+
+  const resetMessages = () => {
+    _playerOneMessage.innerHTML = '';
+    _playerTwoMessage.innerHTML = '';
+  };
+
+  return {
+    updateScore,
+    updateMessages,
+    toggleIndicators,
+    resetIndicators,
+    resetMessages,
   }
 })();
 
@@ -40,24 +113,6 @@ const gameController = (() => {
     [null, null, null],
     [null, null, null],
   ];
-
-  const Player = (name) => {
-    let _name = name;
-    let _score = 0;
-  
-    const getName = () => _name;
-    const setName = (name) => _name = name;
-  
-    const getScore = () => _score;
-    const setScore = (score) => _score = score;
-  
-    return {
-      getName,
-      setName,
-      getScore,
-      setScore,
-    };
-  };
 
   const takeTurn = (x, y) => {
     // X always goes on even turns, starting from 0
@@ -71,15 +126,13 @@ const gameController = (() => {
     displayController.draw();
     const winState = _checkVictory();
     if (winState > 0) {
-      if (winState == 1) {
-        console.log('You win');
-      }
-      else {
-        console.log('Draw');
-      }
+      _gameOver(winState);
       gameBoard.lockBoard();
     }
-    _turnCount++;
+    else {
+      _turnCount++;
+      scoreBoard.toggleIndicators();
+    }
   };
 
   const _checkVictory = () => {
@@ -117,6 +170,25 @@ const gameController = (() => {
       return (win = 2);
     }
     return win;
+  };
+
+  const _gameOver = (state) => {
+    if (state == 1) {
+      // Player one wins on even turns (starting from zero)
+      if (_turnCount % 2 === 0) {
+        playerOne.setScore(playerOne.getScore() + 1);
+        scoreBoard.updateMessages(0);
+      }
+      // Otherwise player two wins
+      else {
+        playerTwo.setScore(playerTwo.getScore() + 1);
+        scoreBoard.updateMessages(1);
+      }
+    }
+    else {
+      scoreBoard.updateMessages(2);
+    }
+    scoreBoard.updateScore();
   };
 
   const getTurnCount = () => _turnCount;
@@ -206,3 +278,24 @@ const displayController = (() => {
     destroy,
   }
 })();
+
+const Player = (name) => {
+  let _name = name;
+  let _score = 0;
+
+  const getName = () => _name;
+  const setName = (name) => _name = name;
+
+  const getScore = () => _score;
+  const setScore = (score) => _score = score;
+
+  return {
+    getName,
+    setName,
+    getScore,
+    setScore,
+  };
+};
+
+const playerOne = Player('Player One');
+const playerTwo = Player('Player Two');

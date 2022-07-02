@@ -87,6 +87,7 @@ body {
   text-align: center;
   border: solid 2px #D8DEE9;
   width: auto;
+  padding: .25em 0;
 }
 
 .player-name > input:focus {

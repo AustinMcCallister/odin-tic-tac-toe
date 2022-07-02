@@ -73,6 +73,52 @@ body {
   cursor: pointer;
 }
 
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+}
+
+.player-name > input {
+  color: #2E3440;
+  background-color: #D8DEE9;
+  font-weight: bold;
+  font-size: 2em;
+  text-align: center;
+  border: solid 2px #D8DEE9;
+  width: auto;
+}
+
+.player-name > input:focus {
+  background-color: #ECEFF4;
+  border-color: #81A1C1;
+  border-radius: .5em;
+}
+
+.turn-indicator {
+  border-radius: 2em;
+  height: 4px;
+  width: 40%;
+  margin: 1em 0;
+}
+
+.turn-indicator.active {
+  background-color: #D08770;
+}
+
+.player-score {
+  color: #2E3440;
+  font-weight: bold;
+  font-size: 8em;
+  margin: 1em 0 0 0;
+}
+
+.victory-message {
+  color: #2E3440;
+  font-weight: bold;
+  font-size: 3em;
+}
+
 .reset-button {
   grid-row: 3 / 4;
   grid-column: 2 / 3;
